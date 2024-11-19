@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grounds Crew Site Edit</title>
+    </head>
+    <body>
+        <h1 style="color: red;">Editing Page</h1>
+        <button onclick="window.location.href = 'GroundHome.html';">Home Page</button><br><br>
+        
+
+        <!-- https://stackoverflow.com/questions/17902483/show-values-from-a-mysql-database-table-inside-a-html-table-on-a-webpage -->
+        <table border="1">
+            <tr>
+                <th>OrderNumber</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>PhoneNumber</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Assignment</th>
+                <th>Status</th>
+            </tr>
+        </table>
+
+
+        <h2>Make changes</h2>
+        <!-- https://www.w3schools.com/html/html_forms.asp -->
+        <form id="filterForm" action="/action_page.php">
+            <label for="orderNumber">Order number:</label><br>
+            <input type="text" id="orderNumber" name="orderNumber" value=""><br>
+            <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname" value=""><br>
+            <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname" value=""><br>
+            <label for="phoneN">Phone number:</label><br>
+            <input type="text" id="phoneN" name="phoneN" value=""><br>
+            <label for="address">Address:</label><br>
+            <input type="text" id="address" name="address" value=""><br>
+            <label for="city">City:</label><br>
+            <input type="text" id="city" name="city" value=""><br>
+            <label for="city">Assingment:</label><br>
+            <input type="text" id="assingment" name="assingment" value=""><br>
+            <label for="city">Status:</label><br>
+            <input type="text" id="status" name="status" value=""><br>
+            <br>
+            <input type="submit" value="Save changes"><br><br><br>
+        </form> 
+
+
+        
+
+        <div id="deleteForm">
+            <form>
+                <label for="orderNumber">Delete Order Number:</label><br>
+                <input type="text" id="orderNumber" name="orderNumber" value="">
+
+                <button id="firstDelete">Delete</button>
+                <div id="deleteFailSafe">
+                    <p>ARE YOU SURE!!!!</p>
+                    <button>No</button>
+                    <input id="finalDelete" type="submit" value="Yes"><br><br><br><br>
+                </div>
+            </form> 
+        </div>
+    </body>
+</html>

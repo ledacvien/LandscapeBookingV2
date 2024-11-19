@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grounds Crew Site Veiw</title>
+    </head>
+    <body>
+        <h1 style="color: rgb(39, 32, 243);">Veiwing Page</h1>
+        <button onclick="window.location.href = 'GroundHome.html';">Home Page</button><br><br>
+        
+        <h2>Narrow down people</h2>
+        <!-- https://www.w3schools.com/html/html_forms.asp -->
+        <form id="filterForm">
+            <label for="orderNumber">Order number:</label><br>
+            <input type="text" id="orderNumber" name="orderNumber" value=""><br>
+            <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname" value=""><br>
+            <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname" value=""><br>
+            <label for="phoneN">Phone number:</label><br>
+            <input type="text" id="phoneN" name="phoneN" value=""><br>
+            <label for="address">Address:</label><br>
+            <input type="text" id="address" name="address" value=""><br>
+            <label for="city">City:</label><br>
+            <input type="text" id="city" name="city" value=""><br>
+            <label for="city">Assingment:</label><br>
+            <input type="text" id="assingment" name="assingment" value=""><br>
+            <label for="city">Status:</label><br>
+            <input type="text" id="status" name="status" value=""><br>
+            <br>
+            <input type="submit" value="Filter"><br><br><br>
+        </form> 
+
+        <form>
+            <label for="orderNumber">Edit Order Number:</label><br>
+            <input type="text" id="orderNumber" name="orderNumber" value="">
+
+            <button id="editBtn">Edit</button>
+        </form> 
+        <br><br>
+        <!-- https://stackoverflow.com/questions/17902483/show-values-from-a-mysql-database-table-inside-a-html-table-on-a-webpage -->
+        <table border="1">
+            <tr>
+                <th>OrderNumber</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>PhoneNumber</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Assignment</th>
+                <th>Status</th>
+            </tr>
+        </table>
+
+        
+    </body>
+</html>
