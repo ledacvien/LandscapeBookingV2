@@ -3,65 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orders Table</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-
-      th {
-        background-color: #f4f4f4;
-      }
-
-      tr:hover {
-        background-color: #f1f1f1;
-      }
-
-      .loader {
-        display: none;
-        margin: 20px auto;
-        border: 4px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 4px solid #3498db;
-        width: 30px;
-        height: 30px;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+    <title>Order Management</title>
+    <link rel="stylesheet" href="Orders.css" />
   </head>
   <body>
-    <h1>Orders Table</h1>
-    <div class="loader" id="loader"></div>
+    <h1>Order Management</h1>
     <table id="ordersTable">
       <thead>
         <tr>
-          <th>Customer ID</th>
           <th>Order Number</th>
-          <th>Status</th>
+          <th>Customer ID</th>
           <th>Team ID</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -69,54 +23,21 @@
       </tbody>
     </table>
 
-    <script>
-      const apiUrl = "http://127.0.0.1:5000/api/order/getorders"; // Replace with your API endpoint
+    <h2>Add Order</h2>
+    <form id="addOrderForm">
+      <label for="customerid">Customer ID:</label>
+      <input type="number" id="customerid" name="customerid" required />
+      <label for="teamid">Team ID:</label>
+      <input type="number" id="teamid" name="teamid" required />
+      <label for="status">Status:</label>
+      <select id="status" name="status" required>
+        <option value="Scheduled">Scheduled</option>
+        <option value="In-progress">In-progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <button type="submit">Add Order</button>
+    </form>
 
-      // Function to fetch and display orders
-      async function fetchOrders() {
-        const loader = document.getElementById("loader");
-        const tableBody = document
-          .getElementById("ordersTable")
-          .querySelector("tbody");
-
-        try {
-          loader.style.display = "block";
-
-          // Fetch the JSON data
-          const response = await fetch(apiUrl);
-          if (!response.ok) {
-            throw new Error("Failed to fetch data from the server.");
-          }
-
-          const data = await response.json();
-          const orders = data.orders;
-
-          // Clear the existing table rows
-          tableBody.innerHTML = "";
-
-          // Populate table rows
-          orders.forEach((order) => {
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-                        <td>${order.customerid}</td>
-                        <td>${order.ordernumber}</td>
-                        <td>${order.status}</td>
-                        <td>${order.teamid}</td>
-                    `;
-
-            tableBody.appendChild(row);
-          });
-        } catch (error) {
-          console.error("Error:", error.message);
-          alert("Failed to fetch orders. Please try again later.");
-        } finally {
-          loader.style.display = "none";
-        }
-      }
-
-      // Call the function to fetch orders when the page loads
-      window.onload = fetchOrders;
-    </script>
+    <script src="Orders.js"></script>
   </body>
 </html>
