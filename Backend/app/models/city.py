@@ -1,5 +1,5 @@
 from .. import db
-from sqlalchemy.dialects.postgresql import ARRAY  # Since you're using PostgreSQL arrays
+from sqlalchemy.dialects.postgresql import ARRAY 
 
 class City(db.Model):
     __tablename__ = 'city'
