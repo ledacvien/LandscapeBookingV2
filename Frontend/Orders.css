@@ -43,3 +43,40 @@ tr:hover {
     transform: rotate(360deg);
   }
 }
+
+/* Add Order form styling */
+form#addOrderForm {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+form#addOrderForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+form#addOrderForm input,
+form#addOrderForm select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form#addOrderForm button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form#addOrderForm button:hover {
+  background-color: #45a049;
+}
