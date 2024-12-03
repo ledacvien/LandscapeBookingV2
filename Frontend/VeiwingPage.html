@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Grounds Crew Site Veiw</title>
+        <title>Grounds Crew Site View</title>
+        <script>
+            async function searchCustomers(event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Retrieve form values
+                const ordernumber = document.getElementById('orderNumber').value.trim();
+                const firstname = document.getElementById('fname').value.trim();
+                const lastname = document.getElementById('lname').value.trim();
+                const phonenumber = document.getElementById('phoneN').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const city = document.getElementById('city').value.trim();
+
+                // Construct query parameters
+                const params = new URLSearchParams();
+                if (ordernumber) params.append('ordernumber', ordernumber);
+                if (firstname) params.append('firstname', firstname);
+                if (lastname) params.append('lastname', lastname);
+                if (phonenumber) params.append('phonenumber', phonenumber);
+                if (address) params.append('address', address);
+                if (city) params.append('city', city);
+
+                // Send GET request to the backend
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/api/customer/searchcustomers?${params.toString()}`);
+                    if (!response.ok) throw new Error('Failed to fetch customer data');
+                    const data = await response.json();
+
+                    // Populate the table with customer data
+                    const table = document.querySelector('table');
+                    const tbody = document.createElement('tbody');
+                    table.querySelectorAll('tbody').forEach(tbody => tbody.remove()); // Clear previous results
+
+                    data.customers.forEach(customer => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${customer.ordernumber || ''}</td>
+                            <td>${customer.firstname || ''}</td>
+                            <td>${customer.lastname || ''}</td>
+                            <td>${customer.phonenumber || ''}</td>
+                            <td>${customer.address || ''}</td>
+                            <td>${customer.city || ''}</td>
+                            <td>${customer.assignment || ''}</td>
+                            <td>${customer.status || ''}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while searching for customers.');
+                }
+            }
+
+
+            // Event listener for form submission
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterForm = document.getElementById('filterForm');
+                filterForm.addEventListener('submit', searchCustomers);
+            });
+        </script>
     </head>
     <body>
-        <h1 style="color: rgb(39, 32, 243);">Veiwing Page</h1>
+        <h1 style="color: rgb(39, 32, 243);">Viewing Page</h1>
         <button onclick="window.location.href = 'GroundHome.html';">Home Page</button><br><br>
-        
+
         <h2>Narrow down people</h2>
-        <!-- https://www.w3schools.com/html/html_forms.asp -->
         <form id="filterForm">
             <label for="orderNumber">Order number:</label><br>
             <input type="text" id="orderNumber" name="orderNumber" value=""><br>
@@ -22,35 +81,34 @@
             <input type="text" id="address" name="address" value=""><br>
             <label for="city">City:</label><br>
             <input type="text" id="city" name="city" value=""><br>
-            <label for="city">Assingment:</label><br>
+            <label for="assingment">Assignment:</label><br>
             <input type="text" id="assingment" name="assingment" value=""><br>
-            <label for="city">Status:</label><br>
+            <label for="status">Status:</label><br>
             <input type="text" id="status" name="status" value=""><br>
             <br>
             <input type="submit" value="Filter"><br><br><br>
-        </form> 
+        </form>
 
         <form>
             <label for="orderNumber">Edit Order Number:</label><br>
             <input type="text" id="orderNumber" name="orderNumber" value="">
-
             <button id="editBtn">Edit</button>
-        </form> 
+        </form>
         <br><br>
-        <!-- https://stackoverflow.com/questions/17902483/show-values-from-a-mysql-database-table-inside-a-html-table-on-a-webpage -->
-        <table border="1">
-            <tr>
-                <th>OrderNumber</th>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>PhoneNumber</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Assignment</th>
-                <th>Status</th>
-            </tr>
-        </table>
 
-        
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>OrderNumber</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>PhoneNumber</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Assignment</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        </table>
     </body>
 </html>
