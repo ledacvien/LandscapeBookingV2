@@ -44,6 +44,31 @@ tr:hover {
   }
 }
 
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.info-container div {
+  flex: 1;
+  text-align: left;
+}
+
+.close-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
+}
+
 /* Add Order form styling */
 form#addOrderForm {
   margin-top: 20px;

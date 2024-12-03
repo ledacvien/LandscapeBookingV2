@@ -1,3 +1,8 @@
+// Ensure apiUrl is not redeclared
+if (typeof window.apiUrl === "undefined") {
+  window.apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
+}
+
 // Function to fetch and display orders
 async function fetchOrders() {
   const tableBody = document
@@ -27,7 +32,7 @@ async function fetchOrders() {
                 <td>${order.teamid}</td>
                 <td>${order.status}</td>
                 <td>
-                    <button onclick="editOrder(${order.ordernumber})">Edit</button>
+                    <button onclick="viewOrder(${order.ordernumber})">Edit</button>
                     <button onclick="deleteOrder(${order.ordernumber})">Delete</button>
                 </td>
             `;
@@ -67,6 +72,165 @@ document
       console.error(error);
     }
   });
+
+async function viewOrder(ordernumber) {
+  const row = document.querySelector(`tr[data-ordernumber="${ordernumber}"]`);
+
+  // Fetch order information
+  const orderResponse = await fetch(
+    `${window.apiUrl}/order/getorderbyid?ordernumber=${ordernumber}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!orderResponse.ok) {
+    console.error("Failed to fetch order information.");
+    return;
+  }
+
+  const orderData = await orderResponse.json();
+
+  // Create a new row to display customer and team information
+  const infoRow = document.createElement("tr");
+  infoRow.innerHTML = `
+    <td colspan="5">
+      <div class="info-container">
+        <div>
+          <h3>Customer Information</h3>
+          <label>First Name: <input type="text" id="customerFirstname" value="${
+            orderData.customer.firstname
+          }"></label><br/>
+          <label>Last Name: <input type="text" id="customerLastname" value="${
+            orderData.customer.lastname
+          }"></label><br/>
+          <label>Phone Number: <input type="text" id="customerPhonenumber" value="${
+            orderData.customer.phonenumber
+          }"></label><br/>
+          <label>Address: <input type="text" id="customerAddress" value="${
+            orderData.customer.address
+          }"></label><br/>
+          <label>City: <input type="text" id="customerCity" value="${
+            orderData.customer.city
+          }"></label><br/>
+        </div>
+        <div>
+          <h3>Team Information</h3>
+          <label>Team ID: <input type="text" id="teamId" value="${
+            orderData.team.teamid
+          }" readonly></label><br/>
+          <label>Address: <input type="text" id="teamAddress" value="${
+            orderData.team.address
+          }"></label><br/>
+          <label>Name: <input type="text" id="teamName" value="${
+            orderData.team.name
+          }"></label><br/>
+          <label>City ID: <input type="text" id="teamCityId" value="${
+            orderData.team.cityid
+          }"></label><br/>
+        </div>
+      </div>
+      <div>
+        <h3>Order Status</h3>
+        <select id="orderStatus">
+          <option value="Scheduled" ${
+            orderData.order.status === "Scheduled" ? "selected" : ""
+          }>Scheduled</option>
+          <option value="In-progress" ${
+            orderData.order.status === "In-progress" ? "selected" : ""
+          }>In-progress</option>
+          <option value="Completed" ${
+            orderData.order.status === "Completed" ? "selected" : ""
+          }>Completed</option>
+        </select>
+      </div>
+      <button class="save-button" onclick="saveOrder(${ordernumber}, 
+          ${orderData.customer.customerid})">
+        Save
+      </button>
+      <button class="close-button" onclick="closeInfoRow(this)">Cancel</button>
+    </td>
+  `;
+
+  // Insert the new row after the current row
+  row.parentNode.insertBefore(infoRow, row.nextSibling);
+}
+
+function closeInfoRow(button) {
+  const infoRow = button.parentElement;
+  infoRow.remove();
+}
+
+// Function to save the updated order, customer, and team information
+async function saveOrder(ordernumber, customerid) {
+  const customerFirstname = document.getElementById("customerFirstname").value;
+  const customerLastname = document.getElementById("customerLastname").value;
+  const customerPhonenumber = document.getElementById(
+    "customerPhonenumber"
+  ).value;
+  const customerAddress = document.getElementById("customerAddress").value;
+  const customerCity = document.getElementById("customerCity").value;
+
+  const teamId = document.getElementById("teamId").value;
+  const teamAddress = document.getElementById("teamAddress").value;
+  const teamName = document.getElementById("teamName").value;
+  const teamCityId = document.getElementById("teamCityId").value;
+
+  const orderStatus = document.getElementById("orderStatus").value;
+
+  try {
+    // Update customer information
+    await fetch(`${window.apiUrl}/customer/updatecustomer`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerid: customerid,
+        firstname: customerFirstname,
+        lastname: customerLastname,
+        phonenumber: customerPhonenumber,
+        address: customerAddress,
+        city: customerCity,
+      }),
+    });
+    // Update team information
+    await fetch(`${window.apiUrl}/team/updateteam`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        teamid: teamId,
+        address: teamAddress,
+        name: teamName,
+        cityid: teamCityId,
+      }),
+    });
+
+    // Update order status
+    await fetch(`${window.apiUrl}/order/updateorder`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ordernumber,
+        customerid: customerid,
+        teamid: teamId,
+        status: orderStatus,
+      }),
+    });
+
+    // Refresh the orders list
+    fetchOrders();
+  } catch (error) {
+    console.error("Failed to save order information.", error);
+  }
+}
 
 // Function to edit an order
 async function editOrder(ordernumber) {

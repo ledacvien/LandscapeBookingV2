@@ -18,6 +18,75 @@ def get_orders():
 def get_status_list():
     return jsonify({'status_list': status_list}), 200
 
+"""
+Request JSON
+{
+    "ordernumber": 1
+}
+
+Return JSON
+{
+    order: {
+        ordernumber: 1,
+        customerid: 1,
+        teamid: 1,
+        status: "Scheduled"
+    },
+    team: {
+        teamid: 1,
+        cityid: 1,
+        address: "123 Elm Street",
+        name: "Team 1"
+    },
+    customer: {
+        customerid: 1,
+        firstname: "John",
+        lastname: "Doe",
+        phonenumber: "1234567890",
+        address: "123 Elm Street",
+        city: "Seattle"
+    },
+}, 200
+"""
+@order_bp.route('/getorderbyid', methods=['GET'])
+def get_order_by_id():
+    ordernumber = request.args.get('ordernumber')
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""SELECT o.ordernumber, o.customerid, o.teamid, o.status, 
+                            t.cityid, t.address AS teamaddr, t.name AS teamname, 
+                            c.firstname, c.lastname, c.phonenumber, c.address AS custaddr, c.city
+                        FROM orders o
+                        JOIN team t ON o.teamid = t.teamid
+                        JOIN customer c ON o.customerid = c.customerid
+                        WHERE ordernumber = %s;""", 
+                        (ordernumber,))
+            order = cur.fetchone()
+            if order:
+                return jsonify({'order': {
+                                    'ordernumber': order['ordernumber'],
+                                    'customerid': order['customerid'],
+                                    'teamid': order['teamid'],
+                                    'status': order['status']
+                                },
+                                'team': {
+                                    'teamid': order['teamid'],
+                                    'cityid': order['cityid'],
+                                    'address': order['teamaddr'],
+                                    'name': order['teamname']
+                                },
+                                'customer': {
+                                    'customerid': order['customerid'],
+                                    'firstname': order['firstname'],
+                                    'lastname': order['lastname'],
+                                    'phonenumber': order['phonenumber'],
+                                    'address': order['custaddr'],
+                                    'city': order['city']
+                                }
+                }), 200
+            return jsonify({'error': 'Order not found'}), 404
+    return jsonify({'error': 'Database error'}), 400
+
 # Define JSON
 # {
 #     "customerid": 1,
