@@ -2,26 +2,67 @@
 <html>
     <head>
         <title>Grounds Crew Site Input</title>
+        <script>
+            async function submitForm(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get form values
+                const firstname = document.getElementById('fname').value.trim();
+                const lastname = document.getElementById('lname').value.trim();
+                const phonenumber = document.getElementById('phoneN').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const city = document.getElementById('city').value.trim();
+
+                // Validate inputs
+                if (!firstname || !lastname || !phonenumber || !address || !city) {
+                    alert('All fields are required.');
+                    return;
+                }
+
+                if (phonenumber.length !== 10 || isNaN(phonenumber)) {
+                    alert('Phone number must be exactly 10 digits and numeric.');
+                    return;
+                }
+
+                // Send POST request to backend
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/api/customer/addcustomer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ firstname, lastname, phonenumber, address, city })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert(data.message); // Show success message
+                        document.getElementById('inputForm').reset(); // Clear form
+                    } else {
+                        alert(data.error || 'Failed to add customer');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        </script>
     </head>
     <body>
         <h1 style="color: rgb(48, 203, 48);">Input Page</h1>
         <button onclick="window.location.href = 'GroundHome.html';">Home Page</button><br><br>
 
-        <!-- https://www.w3schools.com/html/html_forms.asp -->
-        <form id="inputForm" action="/action_page.php">
+        <form id="inputForm" onsubmit="submitForm(event)">
             <label for="fname">First name:</label><br>
-            <input type="text" id="fname" name="fname" value=""><br>
+            <input type="text" id="fname" name="fname"><br>
             <label for="lname">Last name:</label><br>
-            <input type="text" id="lname" name="lname" value=""><br>
+            <input type="text" id="lname" name="lname"><br>
             <label for="phoneN">Phone number:</label><br>
-            <input type="text" id="phoneN" name="phoneN" value=""><br>
+            <input type="text" id="phoneN" name="phoneN"><br>
             <label for="address">Address:</label><br>
-            <input type="text" id="address" name="address" value=""><br>
+            <input type="text" id="address" name="address"><br>
             <label for="city">City:</label><br>
-            <input type="text" id="city" name="city" value=""><br>
+            <input type="text" id="city" name="city"><br>
             <br>
             <input type="submit" value="Submit">
-        </form> 
-
+        </form>
     </body>
 </html>
