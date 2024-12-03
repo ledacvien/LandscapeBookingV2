@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.topnav {
+  width: 100%;
+  background-color: #f4f4f4;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.topnav button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.topnav button:hover {
+  background-color: #45a049;
+}
+
+.content {
+  margin-top: 60px; /* Adjust content to be below the topbar */
+  padding: 20px;
+}

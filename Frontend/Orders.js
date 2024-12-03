@@ -1,5 +1,3 @@
-const apiUrl = "http://127.0.0.1:5000/api/order"; // Replace with your API endpoint
-
 // Function to fetch and display orders
 async function fetchOrders() {
   const tableBody = document
@@ -7,7 +5,7 @@ async function fetchOrders() {
     .querySelector("tbody");
 
   try {
-    const response = await fetch(`${apiUrl}/getorders`);
+    const response = await fetch(`${window.apiUrl}/order/getorders`);
     if (!response.ok) {
       throw new Error("Failed to fetch data from the server.");
     }
@@ -51,7 +49,7 @@ document
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(`${apiUrl}/addorder`, {
+      const response = await fetch(`${window.apiUrl}/order/addorder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +93,7 @@ async function editOrder(ordernumber) {
     const newStatus = statusDropdown.value;
 
     try {
-      const response = await fetch(`${apiUrl}/updateorder`, {
+      const response = await fetch(`${window.apiUrl}/order/updateorder`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +133,7 @@ async function deleteOrder(ordernumber) {
   }
 
   try {
-    const response = await fetch(`${apiUrl}/deleteorder`, {
+    const response = await fetch(`${window.apiUrl}/order/deleteorder`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
