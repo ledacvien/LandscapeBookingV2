@@ -189,7 +189,7 @@ async function saveOrder(ordernumber, customerid) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        customerid: customerid,
+        customerid: customerid.toString(),
         firstname: customerFirstname,
         lastname: customerLastname,
         phonenumber: customerPhonenumber,
