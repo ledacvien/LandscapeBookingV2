@@ -2,7 +2,7 @@
 // if (typeof apiUrl === "undefined") {
 //   apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
 // }
-const apiUrl = "http://127.0.0.1:5000/api";
+// const apiUrl = "http://127.0.0.1:5000/api";
 
 // Function to fetch and display orders
 async function fetchOrders() {
@@ -11,7 +11,7 @@ async function fetchOrders() {
     .querySelector("tbody");
 
   try {
-    const response = await fetch(`${apiUrl}/order/getorders`);
+    const response = await fetch(`http://127.0.0.1:5000/api/order/getorders`);
     if (!response.ok) {
       throw new Error("Failed to fetch data from the server.");
     }
@@ -58,7 +58,7 @@ document
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(`${apiUrl}/order/addorder`, {
+      const response = await fetch(`http://127.0.0.1:5000/api/order/addorder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ async function viewOrder(ordernumber) {
   }
   // Fetch order information
   const orderResponse = await fetch(
-    `${apiUrl}/order/getorderbyid?ordernumber=${ordernumber}`,
+    `http://127.0.0.1:5000/api/order/getorderbyid?ordernumber=${ordernumber}`,
     {
       method: "GET",
       headers: {
@@ -193,7 +193,7 @@ async function saveOrder(ordernumber, customerid) {
 
   try {
     // Update customer information
-    await fetch(`${apiUrl}/customer/updatecustomer`, {
+    await fetch(`http://127.0.0.1:5000/api/customer/updatecustomer`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -208,7 +208,7 @@ async function saveOrder(ordernumber, customerid) {
       }),
     });
     // Update team information
-    await fetch(`${apiUrl}/team/updateteam`, {
+    await fetch(`http://127.0.0.1:5000/api/team/updateteam`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -222,7 +222,7 @@ async function saveOrder(ordernumber, customerid) {
     });
 
     // Update order status
-    await fetch(`${apiUrl}/order/updateorder`, {
+    await fetch(`http://127.0.0.1:5000/api/order/updateorder`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -267,18 +267,21 @@ async function editOrder(ordernumber) {
     const newStatus = statusDropdown.value;
 
     try {
-      const response = await fetch(`${apiUrl}/order/updateorder`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ordernumber,
-          customerid: customerCell.textContent,
-          teamid: teamCell.textContent,
-          status: newStatus,
-        }),
-      });
+      const response = await fetch(
+        `http://127.0.0.1:5000/api/order/updateorder`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ordernumber,
+            customerid: customerCell.textContent,
+            teamid: teamCell.textContent,
+            status: newStatus,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update order.");
@@ -307,13 +310,16 @@ async function deleteOrder(ordernumber) {
   }
 
   try {
-    const response = await fetch(`${apiUrl}/order/deleteorder`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ordernumber }),
-    });
+    const response = await fetch(
+      `http://127.0.0.1:5000/api/order/deleteorder`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ordernumber }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to delete order.");
