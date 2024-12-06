@@ -1,6 +1,6 @@
 // Ensure apiUrl is not redeclared
-if (typeof window.apiUrl === "undefined") {
-  window.apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
+if (typeof apiUrl === "undefined") {
+  apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
 }
 
 // Function to fetch and display orders
@@ -10,7 +10,7 @@ async function fetchOrders() {
     .querySelector("tbody");
 
   try {
-    const response = await fetch(`${window.apiUrl}/order/getorders`);
+    const response = await fetch(`${apiUrl}/order/getorders`);
     if (!response.ok) {
       throw new Error("Failed to fetch data from the server.");
     }
@@ -20,6 +20,9 @@ async function fetchOrders() {
 
     // Clear the existing table rows
     tableBody.innerHTML = "";
+
+    // Sort orders by ordernumber
+    orders.sort((a, b) => a.ordernumber - b.ordernumber);
 
     // Populate table rows
     orders.forEach((order) => {
@@ -32,8 +35,8 @@ async function fetchOrders() {
                 <td>${order.teamid}</td>
                 <td>${order.status}</td>
                 <td>
-                    <button onclick="viewOrder(${order.ordernumber})">Edit</button>
-                    <button onclick="deleteOrder(${order.ordernumber})">Delete</button>
+                    <button class="view-button" onclick="viewOrder(${order.ordernumber})">Edit</button>
+                    <button class="delete-button" onclick="deleteOrder(${order.ordernumber})">Delete</button>
                 </td>
             `;
 
@@ -54,7 +57,7 @@ document
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(`${window.apiUrl}/order/addorder`, {
+      const response = await fetch(`${apiUrl}/order/addorder`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,9 +79,14 @@ document
 async function viewOrder(ordernumber) {
   const row = document.querySelector(`tr[data-ordernumber="${ordernumber}"]`);
 
+  // Remove existing info row if it exists
+  const existingInfoRow = row.nextElementSibling;
+  if (existingInfoRow && existingInfoRow.classList.contains("info-row")) {
+    existingInfoRow.remove();
+  }
   // Fetch order information
   const orderResponse = await fetch(
-    `${window.apiUrl}/order/getorderbyid?ordernumber=${ordernumber}`,
+    `${apiUrl}/order/getorderbyid?ordernumber=${ordernumber}`,
     {
       method: "GET",
       headers: {
@@ -96,6 +104,7 @@ async function viewOrder(ordernumber) {
 
   // Create a new row to display customer and team information
   const infoRow = document.createElement("tr");
+  infoRow.classList.add("info-row");
   infoRow.innerHTML = `
     <td colspan="5">
       <div class="info-container">
@@ -121,7 +130,7 @@ async function viewOrder(ordernumber) {
           <h3>Team Information</h3>
           <label>Team ID: <input type="text" id="teamId" value="${
             orderData.team.teamid
-          }" readonly></label><br/>
+          }" disabled></label><br/>
           <label>Address: <input type="text" id="teamAddress" value="${
             orderData.team.address
           }"></label><br/>
@@ -183,7 +192,7 @@ async function saveOrder(ordernumber, customerid) {
 
   try {
     // Update customer information
-    await fetch(`${window.apiUrl}/customer/updatecustomer`, {
+    await fetch(`${apiUrl}/customer/updatecustomer`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -198,7 +207,7 @@ async function saveOrder(ordernumber, customerid) {
       }),
     });
     // Update team information
-    await fetch(`${window.apiUrl}/team/updateteam`, {
+    await fetch(`${apiUrl}/team/updateteam`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +221,7 @@ async function saveOrder(ordernumber, customerid) {
     });
 
     // Update order status
-    await fetch(`${window.apiUrl}/order/updateorder`, {
+    await fetch(`${apiUrl}/order/updateorder`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -257,7 +266,7 @@ async function editOrder(ordernumber) {
     const newStatus = statusDropdown.value;
 
     try {
-      const response = await fetch(`${window.apiUrl}/order/updateorder`, {
+      const response = await fetch(`${apiUrl}/order/updateorder`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -297,7 +306,7 @@ async function deleteOrder(ordernumber) {
   }
 
   try {
-    const response = await fetch(`${window.apiUrl}/order/deleteorder`, {
+    const response = await fetch(`${apiUrl}/order/deleteorder`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
