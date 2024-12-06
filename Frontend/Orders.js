@@ -1,7 +1,8 @@
 // Ensure apiUrl is not redeclared
-if (typeof apiUrl === "undefined") {
-  apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
-}
+// if (typeof apiUrl === "undefined") {
+//   apiUrl = "http://127.0.0.1:5000/api"; // Replace with your API endpoint
+// }
+const apiUrl = "http://127.0.0.1:5000/api";
 
 // Function to fetch and display orders
 async function fetchOrders() {
